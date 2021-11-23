@@ -4,6 +4,11 @@ import (
 	"fmt"
 )
 
+type myShenonFano struct {
+	characterFrequency    map[rune]int
+	newCharacterFrequency map[rune]string
+}
+
 //Функция возвращает мапу из кодов букв и частоты их появления в сообщении
 func calculateFrequancy(message string) map[rune]int {
 
@@ -44,18 +49,68 @@ func calculateProbability(characterFrequency map[rune]int, message string) /*([]
 				freqMas = append(freqMas[:i], append([]int{freq}, freqMas[i:]...)...)
 				charMas = append(charMas[:i], append([]rune{char}, charMas[i:]...)...)
 				break
-			} /*else {
-				freqMas = append(freqMas, freq)
-				charMas = append(charMas, char)
-				break
-			}*/
+			}
 		}
 	}
 
 	fmt.Println(charMas, " Это массив чаров")
 	fmt.Println(freqMas, " Это массив частот")
 
+	//пустая мапа, для чаров - ключи, на месте значений будут 0101010
+	if myShenon.newCharacterFrequency == nil {
+		myShenon.newCharacterFrequency = make(map[rune]string)
+	}
+	for _, char := range charMas {
+		myShenon.newCharacterFrequency[char] = ""
+	}
+
+	//var firstHalf, secondHalf int
+
+	n := len(charMas)
+	/*if n%2 == 0 {
+		firstHalf = n / 2
+		secondHalf = firstHalf
+	} else {
+		firstHalf = n/2 + 1
+		secondHalf = n - firstHalf
+	}*/
+
+	//нахожу середину charMas
+	n = len(charMas) / 2
+	if len(charMas) != n*2 {
+		n += 1
+	}
+	encodingMessage(charMas[:n], myShenon.newCharacterFrequency, true)
+	encodingMessage(charMas[n:], myShenon.newCharacterFrequency, false)
+
+	fmt.Println(myShenon.newCharacterFrequency)
 }
+
+//Шифрование всех символов сообщения, минимальная длина символа будет у чаще встречающегося в сообщении символа
+func encodingMessage(charMas []rune, mapRune map[rune]string, flag bool) /* map[rune]int */ {
+
+	bit := "0"
+	lenghChar := len(charMas)
+
+	if flag {
+		bit = "1"
+	}
+
+	for _, char := range charMas {
+		mapRune[char] += bit
+	}
+
+	if lenghChar >= 2 {
+		t := lenghChar / 2
+		if lenghChar != t*2 {
+			t += 1
+		}
+		encodingMessage(charMas[:t], mapRune, true)
+		encodingMessage(charMas[t:], mapRune, false)
+	}
+}
+
+var myShenon myShenonFano
 
 func main() {
 
@@ -64,3 +119,8 @@ func main() {
 	calculateFrequancy(message)
 
 }
+
+/*
+	мапа с ключем чаром , берется массив с чарами делится пополам - к левой части прибоваляю 1 к правой 0
+	рекурсивно так проделываю пока не останется 1 - 2 символа
+*/
