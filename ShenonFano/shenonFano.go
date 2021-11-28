@@ -7,6 +7,7 @@ import (
 type myShenonFano struct {
 	characterFrequency    map[rune]int
 	newCharacterFrequency map[rune]string
+	encodedMessage        string
 }
 
 //Функция возвращает мапу из кодов букв и частоты их появления в сообщении
@@ -43,7 +44,6 @@ func calculateProbability(characterFrequency map[rune]int, message string) /*([]
 			continue
 		}
 
-		//fmt.Println("Начало цикла сортировки")
 		for i := 0; i < len(charMas); i++ {
 			if freqMas[i] >= freq {
 				freqMas = append(freqMas[:i], append([]int{freq}, freqMas[i:]...)...)
@@ -64,19 +64,7 @@ func calculateProbability(characterFrequency map[rune]int, message string) /*([]
 		myShenon.newCharacterFrequency[char] = ""
 	}
 
-	//var firstHalf, secondHalf int
-
-	n := len(charMas)
-	/*if n%2 == 0 {
-		firstHalf = n / 2
-		secondHalf = firstHalf
-	} else {
-		firstHalf = n/2 + 1
-		secondHalf = n - firstHalf
-	}*/
-
-	//нахожу середину charMas
-	n = len(charMas) / 2
+	n := len(charMas) / 2
 	if len(charMas) != n*2 {
 		n += 1
 	}
@@ -84,6 +72,8 @@ func calculateProbability(characterFrequency map[rune]int, message string) /*([]
 	encodingMessage(charMas[n:], myShenon.newCharacterFrequency, false)
 
 	fmt.Println(myShenon.newCharacterFrequency)
+
+	getMessage(myShenon.newCharacterFrequency, message)
 }
 
 //Шифрование всех символов сообщения, минимальная длина символа будет у чаще встречающегося в сообщении символа
@@ -110,6 +100,15 @@ func encodingMessage(charMas []rune, mapRune map[rune]string, flag bool) /* map[
 	}
 }
 
+func getMessage(mapRune map[rune]string, message string) {
+
+	for _, char := range message {
+		myShenon.encodedMessage += string(mapRune[char])
+		myShenon.encodedMessage += " "
+	}
+	fmt.Println(myShenon.encodedMessage)
+}
+
 var myShenon myShenonFano
 
 func main() {
@@ -119,8 +118,3 @@ func main() {
 	calculateFrequancy(message)
 
 }
-
-/*
-	мапа с ключем чаром , берется массив с чарами делится пополам - к левой части прибоваляю 1 к правой 0
-	рекурсивно так проделываю пока не останется 1 - 2 символа
-*/
