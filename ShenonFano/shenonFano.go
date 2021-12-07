@@ -1,13 +1,16 @@
 package main
 
 import (
+	"bufio"
 	"fmt"
+	"os"
 )
 
 type myShenonFano struct {
 	characterFrequency    map[rune]int
 	newCharacterFrequency map[rune]string
 	encodedMessage        string
+	finalMessage          string
 }
 
 //Функция возвращает мапу из кодов букв и частоты их появления в сообщении
@@ -74,6 +77,7 @@ func calculateProbability(characterFrequency map[rune]int, message string) /*([]
 	fmt.Println(myShenon.newCharacterFrequency)
 
 	getMessage(myShenon.newCharacterFrequency, message)
+	finalCompression(message, myShenon.newCharacterFrequency)
 }
 
 //Шифрование всех символов сообщения, минимальная длина символа будет у чаще встречающегося в сообщении символа
@@ -109,12 +113,27 @@ func getMessage(mapRune map[rune]string, message string) {
 	fmt.Println(myShenon.encodedMessage)
 }
 
+func finalCompression(message string, mapRune map[rune]string) {
+	lenghOfStr := len(message)
+	fmt.Println(lenghOfStr*8, "длина в битах не сжатого сообщения")
+	for _, char := range message {
+		myShenon.finalMessage += string(mapRune[char])
+	}
+	fmt.Println(len(myShenon.finalMessage), "длина сжатого сообщения")
+	fmt.Println(100.0-float64(len(myShenon.finalMessage))*100/float64(len(message)*8), " - Процент сжатия")
+}
+
 var myShenon myShenonFano
 
 func main() {
 
 	var message string
-	fmt.Scanln(&message)
+	//fmt.Scanln(&message)
+	scanner := bufio.NewScanner(os.Stdin)
+	if scanner.Scan() {
+		message = scanner.Text()
+
+	}
 	calculateFrequancy(message)
 
 }
