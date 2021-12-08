@@ -26,7 +26,7 @@ func calculateFrequancy(message string) map[rune]int {
 		}
 	}
 
-	fmt.Println(characterFrequency, " мапа сообщения")
+	//fmt.Println(characterFrequency, " мапа сообщения")
 	calculateProbability(characterFrequency, message)
 
 	return characterFrequency
@@ -56,8 +56,8 @@ func calculateProbability(characterFrequency map[rune]int, message string) /*([]
 		}
 	}
 
-	fmt.Println(charMas, " Это массив чаров")
-	fmt.Println(freqMas, " Это массив частот")
+	//fmt.Println(freqMas, " Это массив частот")
+	//fmt.Println(charMas, " Это массив чаров")
 
 	//пустая мапа, для чаров - ключи, на месте значений будут 0101010
 	if myShenon.newCharacterFrequency == nil {
@@ -74,9 +74,12 @@ func calculateProbability(characterFrequency map[rune]int, message string) /*([]
 	encodingMessage(charMas[:n], myShenon.newCharacterFrequency, true)
 	encodingMessage(charMas[n:], myShenon.newCharacterFrequency, false)
 
+	fmt.Println("-----------------Зашифрованный алфавит--------------------")
 	fmt.Println(myShenon.newCharacterFrequency)
 
+	fmt.Println("----------------Зашифрованное сообщение-------------------")
 	getMessage(myShenon.newCharacterFrequency, message)
+	fmt.Println("----------------------------------------------------------")
 	finalCompression(message, myShenon.newCharacterFrequency)
 }
 
@@ -115,11 +118,11 @@ func getMessage(mapRune map[rune]string, message string) {
 
 func finalCompression(message string, mapRune map[rune]string) {
 	lenghOfStr := len(message)
-	fmt.Println(lenghOfStr*8, "длина в битах не сжатого сообщения")
+	fmt.Println(lenghOfStr*8, ":Длина в битах не сжатого сообщения")
 	for _, char := range message {
 		myShenon.finalMessage += string(mapRune[char])
 	}
-	fmt.Println(len(myShenon.finalMessage), "длина сжатого сообщения")
+	fmt.Println(len(myShenon.finalMessage), ":Длина сжатого сообщения")
 	fmt.Println(100.0-float64(len(myShenon.finalMessage))*100/float64(len(message)*8), " - Процент сжатия")
 }
 
@@ -128,7 +131,7 @@ var myShenon myShenonFano
 func main() {
 
 	var message string
-	//fmt.Scanln(&message)
+
 	scanner := bufio.NewScanner(os.Stdin)
 	if scanner.Scan() {
 		message = scanner.Text()
